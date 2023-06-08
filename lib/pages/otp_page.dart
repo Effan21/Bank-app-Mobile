@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bank_app/pages/secret_code_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,8 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   late String smsOTP;
   String errorMessage = '';
+
+
 
   @override
   void dispose() {
@@ -62,7 +65,7 @@ class _OtpPageState extends State<OtpPage> {
                   height: screenHeight * 0.02,
                 ),
                 Text(
-                  'Enter a 6-digit number that was sent to your contact ${widget.phoneNumber}',
+                  'Entrez le code à 6chiffres envoyé au numéro: ${widget.phoneNumber}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -115,7 +118,7 @@ class _OtpPageState extends State<OtpPage> {
                           ),
                           alignment: Alignment.center,
                           child: const Text(
-                            'Verify',
+                            'Verifier',
                             style: TextStyle(color: Colors.black, fontSize: 16.0),
                           ),
                         ),
@@ -134,7 +137,7 @@ class _OtpPageState extends State<OtpPage> {
 
   Future<void> verifyOtp() async {
     if (smsOTP == null || smsOTP.isEmpty) {
-      showAlertDialog(context, 'Please enter a 6-digit OTP');
+      showAlertDialog(context, 'Entrez le code OTP à 6 chiffres');
       return;
     }
 
@@ -145,7 +148,7 @@ class _OtpPageState extends State<OtpPage> {
     if (response.statusCode == 200) {
       // OTP verification successful
       print('OTP verification successful');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CodePage(phoneNumber: widget.phoneNumber)));
     } else {
       // Error in verifying OTP
       print('Failed to verify OTP. Status code: ${response.statusCode}');

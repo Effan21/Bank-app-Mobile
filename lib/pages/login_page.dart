@@ -100,14 +100,14 @@ class _LoginPageState extends State<LoginPage> {
                   height: screenHeight * 0.02,
                 ),
                 const Text(
-                  'Login',
+                  'Se connecter',
                   style: TextStyle(fontSize: 28, color: Colors.black),
                 ),
                 SizedBox(
                   height: screenHeight * 0.02,
                 ),
                 const Text(
-                  'Enter your mobile number to receive a verification code',
+                  'Entrez votre numéro de téléphone pour vous connecter',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                             Expanded(
                               child: TextField(
                                 decoration: const InputDecoration(
-                                  hintText: 'Contact Number',
+                                  hintText: 'Numéro de téléphone avec l\'indicatif',
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
@@ -201,7 +201,7 @@ class CustomButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: const Text(
-          'Send OTP',
+          'Continuez',
           style: TextStyle(color: Colors.black, fontSize: 16.0),
         ),
       ),

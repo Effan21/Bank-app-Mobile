@@ -6,7 +6,7 @@ import 'package:bank_app/pages/home_page.dart';
 import 'package:bank_app/pages/loan_page.dart';
 import 'package:bank_app/pages/login_page.dart';
 import 'package:bank_app/pages/root_app.dart';
-import 'package:bank_app/regisration%20pages/registration_page.dart';
+import 'package:bank_app/registration/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bank_app/theme/colors.dart';
 import 'package:bank_app/widgets/service_box.dart';

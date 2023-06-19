@@ -118,7 +118,7 @@ class _LoanState extends State<Loan> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 10.0),
             child: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -130,45 +130,21 @@ class _LoanState extends State<Loan> {
               ),
             ),
           ),
+          const SizedBox(
+            width: 60,
+          ),
           const Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Simulateur de crédit",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
+            child: Text(
+              "Simulateur de crédit",
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: _buildSettings(),
-          ),
+
         ],
       ),
     );
   }
 
-  Widget _buildSettings() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(1, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Icon(
-        Icons.settings,
-        color: Colors.black,
-        size: 30,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

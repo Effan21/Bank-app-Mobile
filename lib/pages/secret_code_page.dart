@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:bank_app/pages/root_app.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 import 'package:http/http.dart' as http;
 
+import '../const.dart';
 import 'home_page.dart';
 
 class CodePage extends StatefulWidget {
@@ -131,7 +133,7 @@ class _CodePageState extends State<CodePage> {
 
   Future<void> verifyCode() async {
     final response = await http.get(
-      Uri.parse('http://192.168.1.69:8000/bank/clients/'),
+      Uri.parse('http://$ip_server:8000/bank/clients/'),
     );
 
     if (response.statusCode == 200) {
@@ -143,7 +145,14 @@ class _CodePageState extends State<CodePage> {
       print(response.body);
 
       if (client != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+        final clientId = client['id'];
+        final clientName = client['nom'];
+        final isActive = client['is_active'];
+        if (isActive == true) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RootApp(clientId: clientId, clientName: clientName,)));
+        } else {
+
+        }
       } else {
         print('erro');
       }

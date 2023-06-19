@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'avatar_image.dart';
@@ -18,14 +20,27 @@ class UserBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final beneficiaire = user["nom"] ?? "";
+    final random = Random();
+    final color = Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+
     return Column(
       children: [
-        Initicon(text: user["fname"], size: 55, backgroundColor: user["color"]),
+        Initicon(
+          text: beneficiaire,
+          size: 55,
+          backgroundColor: color,
+        ),
         const SizedBox(
           height: 8,
         ),
         Text(
-          user["fname"],
+          beneficiaire.split(' ')[0],
           style: TextStyle(fontWeight: FontWeight.w500),
         )
       ],

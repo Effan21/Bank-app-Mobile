@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:bank_app/theme/colors.dart';
 import 'package:bank_app/widgets/service_box.dart';
 
+import 'card_page.dart';
+
 class PublicPage extends StatefulWidget {
   const PublicPage({Key? key}) : super(key: key);
 
@@ -22,7 +24,7 @@ class _PublicPageState extends State<PublicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: _buildBody(context),
     );
   }
@@ -178,11 +180,6 @@ Widget _buildServices(BuildContext context) {
                 ),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RootApp(),
-                  ));
               },
               child: ServiceBox(
                 title: "Assistance par message",

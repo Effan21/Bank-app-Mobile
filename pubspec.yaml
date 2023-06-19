@@ -50,6 +50,12 @@ dependencies:
   firebase_core: ^2.13.1
   image_picker: ^0.8.7+5
   signature: ^5.3.0
+  google_fonts: ^4.0.4
+  intl: ^0.18.1
+  flutter_credit_card: ^3.0.6
+  group_list_view: ^1.1.1
+  share_plus: ^7.0.2
+  firebase_messaging: ^14.6.3
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +85,9 @@ flutter:
      - assets/images/bgcard.png
      - assets/images/registration.png
      - assets/images/otp_icon.png
+     - assets/images/wave.png
+     - assets/images/orange-money.png
+     - assets/images/MTN.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

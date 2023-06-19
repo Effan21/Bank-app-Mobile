@@ -82,7 +82,7 @@ class ExchangePage extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           body: Column(
             children: [
               _buildHeader(context),
@@ -120,7 +120,7 @@ class ExchangePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 10.0),
             child: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -132,45 +132,21 @@ class ExchangePage extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(
+            width: 60,
+          ),
           Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Convertisseur de devises",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
+            child: Text(
+              "Convertisseur de devises",
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: _buildSettings(),
-          ),
+
         ],
       ),
     );
   }
 
-  Widget _buildSettings() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(1, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Icon(
-        Icons.settings,
-        color: Colors.black,
-        size: 30,
-      ),
-    );
-  }
 
   Widget buildBody(BuildContext context) {
     return Padding(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import '../const.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -21,13 +23,13 @@ class _LoginPageState extends State<LoginPage> {
   Future<String> fetchOTP(String phoneNumber) async {
     print(phoneNumber);
     final response =
-    await http.get(Uri.parse('http://192.168.1.69:8000/bank/$phoneNumber'));
+    await http.get(Uri.parse('http://$ip_server:8000/bank/$phoneNumber/'));
     print(response);
     if (response.statusCode == 200) {
       final otp = response.body;
       return otp;
-    } else {
 
+    } else {
       throw Exception('Failed to fetch OTP');
     }
   }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 
+import '../const.dart';
 import 'home_page.dart';
 
 
@@ -142,7 +143,7 @@ class _OtpPageState extends State<OtpPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.1.69:8000/bank/${widget.phoneNumber}/?otp=${smsOTP}'),
+      Uri.parse('http://$ip_server:8000/bank/${widget.phoneNumber}/?otp=${smsOTP}'),
     );
 
     if (response.statusCode == 200) {

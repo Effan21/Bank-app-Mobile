@@ -1,10 +1,16 @@
+import 'package:bank_app/pages/chat_page.dart';
 import 'package:bank_app/pages/home_page.dart';
+import 'package:bank_app/pages/profile_page.dart';
 import 'package:bank_app/theme/colors.dart';
 import 'package:bank_app/widgets/bottombar_item.dart';
 import 'package:flutter/material.dart';
 
+import 'card_page.dart';
+
 class RootApp extends StatefulWidget {
-  const RootApp({Key? key}) : super(key: key);
+  final int clientId;
+  final String clientName;
+  const RootApp({Key? key, required this.clientId, required this.clientName}) : super(key: key);
 
   @override
   _RootAppState createState() => _RootAppState();
@@ -152,31 +158,16 @@ class _RootAppState extends State<RootApp> {
     return IndexedStack(
       index: activeTab,
       children: <Widget>[
-        HomePage(),
-        Center(
-          child: Text(
-            "Wallet",
-            style: TextStyle(fontSize: 35),
-          ),
-        ),
+        HomePage(clientId: widget.clientId, clientName: widget.clientName),
+       CardPage( clientName: widget.clientName, clientId: widget.clientId,),
         Center(
           child: Text(
             "New",
             style: TextStyle(fontSize: 35),
           ),
         ),
-        Center(
-          child: Text(
-            "Statistics",
-            style: TextStyle(fontSize: 35),
-          ),
-        ),
-        Center(
-          child: Text(
-            "Account",
-            style: TextStyle(fontSize: 35),
-          ),
-        )
+       ChatScreen(clientId: widget.clientId, clientName: widget.clientName,),
+        ProfilePage(clientId: widget.clientId, clientName: widget.clientName,)
       ],
     );
   }

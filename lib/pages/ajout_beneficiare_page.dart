@@ -113,99 +113,101 @@ class _AjoutPageState extends State<AjoutPage> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white60,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.shadowColor.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(1, 1), // changes position of shadow
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.white60,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.shadowColor.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: Offset(1, 1), // changes position of shadow
+              ),
+            ],
+            image: DecorationImage(
+              image: AssetImage('assets/images/bgcard.png'),
             ),
-          ],
-          image: DecorationImage(
-            image: AssetImage('assets/images/bgcard.png'),
           ),
-        ),
-        child: Column(
-          children: [
-            _buildHeader(context),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  height: screenHeight - kToolbarHeight - MediaQuery.of(context).padding.top,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: screenHeight * 0.02),
-                      Container(
-                        padding: const EdgeInsets.all(16.0),
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: screenHeight * 0.02),
-                            const Text(
-                              'Remplissez le formulaire pour ajouter un nouveau bénéficiaire',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+          child: Column(
+            children: [
+              _buildHeader(context),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: screenHeight - kToolbarHeight - MediaQuery.of(context).padding.top,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: screenHeight * 0.02),
+                        Container(
+                          padding: const EdgeInsets.all(16.0),
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: screenHeight * 0.02),
+                              const Text(
+                                'Remplissez le formulaire pour ajouter un nouveau bénéficiaire',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: screenHeight * 0.04),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: screenWidth > 600 ? screenWidth * 0.2 : 16),
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(16.0),
+                              SizedBox(height: screenHeight * 0.04),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: screenWidth > 600 ? screenWidth * 0.2 : 16),
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 1.0),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    CustomTextField(
+                                      controller: nameController,
+                                      hintText: 'Nom',
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: phoneNumberController,
+                                      hintText: 'Numéro de téléphone',
+                                      keyboardType: TextInputType.phone,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(14),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    CustomButton(
+                                      onPressed: () => submitRegistration(context),
+                                      text: 'Continuer',
+                                      context: context,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Column(
-                                children: [
-                                  CustomTextField(
-                                    controller: nameController,
-                                    hintText: 'Nom',
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  CustomTextField(
-                                    controller: phoneNumberController,
-                                    hintText: 'Numéro de téléphone',
-                                    keyboardType: TextInputType.phone,
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(14),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  CustomButton(
-                                    onPressed: () => submitRegistration(context),
-                                    text: 'Continuer',
-                                    context: context,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

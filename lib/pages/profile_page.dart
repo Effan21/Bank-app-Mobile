@@ -72,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: const [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage('http://'),
+                      backgroundImage: NetworkImage('https://avatars.githubusercontent.com/u/86506519?v=4'),
                     ),
                   ],
                 ),
@@ -86,12 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       widget.clientName,
                       style: TextStyle(fontWeight: FontWeight.w900, fontSize: 26),
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text("@peakyBlinders"),
                   ],
                 ),
                 const SizedBox(

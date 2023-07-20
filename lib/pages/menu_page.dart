@@ -16,9 +16,11 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _buildBody(context),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: _buildBody(context),
+      ),
     );
   }
 

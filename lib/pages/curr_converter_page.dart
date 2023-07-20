@@ -81,16 +81,18 @@ class ExchangePage extends StatelessWidget {
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            children: [
-              _buildHeader(context),
-              const SizedBox(
-                height: 35,
-              ),
-              Expanded(child: buildBody(context)),
-            ],
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
+              children: [
+                _buildHeader(context),
+                const SizedBox(
+                  height: 35,
+                ),
+                Expanded(child: buildBody(context)),
+              ],
+            ),
           ),
         ),
       ),

@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import '../const.dart';
 import '../theme/colors.dart';
 
+enum Demandes { creditCard, chequier }
+
 class CardPage extends StatefulWidget {
   final String clientName;
   final int clientId;
@@ -20,8 +22,11 @@ class _CardPageState extends State<CardPage> {
   List<CarteCredit> creditCards = [];
   List<DemandeCarte> creditCardDemands = [];
   List<DemandeChequier> chequeBookDemands = [];
+  String selectedAction = 'Carte de crédit';
+  List<String> actions = ['Carte de crédit', 'Chéquier'];
   late int idCompte;
   bool isLoading = true;
+  TextEditingController typeController = TextEditingController();
 
   @override
   void initState() {
@@ -174,6 +179,7 @@ class _CardPageState extends State<CardPage> {
     }
   }
 
+   Demandes type = Demandes.creditCard;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -265,6 +271,120 @@ class _CardPageState extends State<CardPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff1b447b),
         onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SingleChildScrollView(
+                  child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+
+
+                      return Flex(
+                        direction: Axis.vertical,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                DropdownButton<String>(
+                                  value: selectedAction,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedAction = value!;
+                                    });
+                                  },
+                                  items: actions.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  dropdownColor: Colors.grey[200], // Set the dropdown background color
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ), // Set the style for the dropdown items
+                                  icon: Icon(Icons.arrow_drop_down), // Set the dropdown icon
+                                ),
+                                SizedBox(height: 5),
+                                Column(
+                                  children: [
+                                    ListTile(
+                                      title: const Text('Carte de crédit'),
+                                      leading: Radio(
+                                        value: Demandes.creditCard,
+                                        groupValue: type,
+                                        onChanged: (Demandes? value) {
+                                          setState(() {
+                                            type = value!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    ListTile(
+                                      title: const Text('Chéquier'),
+                                      leading: Radio(
+                                        value: Demandes.chequier,
+                                        groupValue: type,
+                                        onChanged: (Demandes? value) {
+                                          setState(() {
+                                            type = value!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 15),
+                                Text(
+                                  'Type',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                TextField(
+                                  controller: typeController,
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                    hintText: 'Entrez le type',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: (){
+
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(16),
+                                    ),
+                                    child: Text(
+                                      'Envoyer',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
           // Handle floating action button pressed
           // Implement the logic for creating a new credit card demand
         },

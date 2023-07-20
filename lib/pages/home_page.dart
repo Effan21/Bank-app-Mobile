@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:bank_app/data/json.dart';
 import 'package:bank_app/pages/ajout_beneficiare_page.dart';
@@ -35,10 +37,35 @@ class _HomePageState extends State<HomePage> {
   List<String> actions = ['Dépot', 'Retrait'];
   String amount = '';
   TextEditingController numFacture = TextEditingController();
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
+    startPolling();
+  }
+
+  @override
+  void dispose() {
+    stopPolling();
+    super.dispose();
+  }
+
+  void startPolling () {
+    const duration = Duration(seconds:2);
+    timer = Timer.periodic(duration, (_) {
+      checkBalance();
+    });
+    }
+
+
+
+  void stopPolling() {
+    timer?.cancel();
+
+  }
+
+void checkBalance(){
     fetchBalance();
   }
 
@@ -54,10 +81,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      body: _buildBody(),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        body: _buildBody(),
+      ),
     );
   }
 
@@ -586,11 +615,7 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder<List<dynamic>>(
       future: fetchBeneficiaries(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {
+          if (snapshot.hasData) {
           var beneficiaries = snapshot.data!;
           var users = beneficiaries.map(
                 (e) => GestureDetector(
@@ -672,23 +697,59 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  void _showSuccessDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _performWithdrawal(double withdrawalAmount) async {
     try {
-      // Retrieve the account information of the sender
       final senderResponse = await http.get(Uri.parse('http://$ip_server:8000/bank/comptes/?client=${widget.clientId}'));
       if (senderResponse.statusCode == 200) {
         final accountSenderData = jsonDecode(senderResponse.body) as List<dynamic>;
-         print(accountSenderData);
+
         if (accountSenderData.isNotEmpty) {
           final double senderCurrentBalance = accountSenderData[0]['solde'];
           final int accountId = accountSenderData[0]['id'];
 
-          print(senderCurrentBalance);
-
           if (senderCurrentBalance >= withdrawalAmount) {
             final double newSenderBalance = senderCurrentBalance - withdrawalAmount;
 
-            // Update the sender's balance
             final Map<String, dynamic> updatedSenderBalance = {
               'solde': newSenderBalance,
             };
@@ -700,16 +761,13 @@ class _HomePageState extends State<HomePage> {
             );
 
             if (updateSenderResponse.statusCode == 200) {
-              // Save the withdrawal transaction
               final Map<String, dynamic> withdrawalTransactionData = {
                 'type': 0,
                 'montant': withdrawalAmount,
                 'compte': accountId,
                 'operateur': noms.toString().split('.').last
-
+    ,
               };
-
-              print(withdrawalTransactionData);
 
               final transactionResponse = await http.post(
                 Uri.parse('http://$ip_server:8000/bank/operations/'),
@@ -718,50 +776,40 @@ class _HomePageState extends State<HomePage> {
               );
 
               if (transactionResponse.statusCode == 201 || transactionResponse.statusCode == 200) {
-                // Withdrawal transaction saved successfully
-                print('Withdrawal successful');
+                _showSuccessDialog(context, 'Retrait effectué');
               } else {
-                // Error occurred while saving the withdrawal transaction
-                print(transactionResponse.statusCode);
-                print('Failed to save withdrawal transaction');
+                _showErrorDialog(context, 'votre retrait à échoué');
               }
             } else {
-              // Error occurred while updating the sender's balance
-              print('Failed to update sender balance');
+              _showErrorDialog(context, 'Failed to update sender balance');
             }
           } else {
-            // Insufficient balance for withdrawal
-            print('Insufficient balance for withdrawal');
+            _showErrorDialog(context, 'Solde insuffisant');
           }
         } else {
-          // Account data not found
-          print('Account data not found');
+          _showErrorDialog(context, 'Account data not found');
         }
       } else {
-        // Error occurred while retrieving the account data
-        print('Failed to retrieve account data');
+        _showErrorDialog(context, 'Failed to retrieve account data');
       }
     } catch (error) {
-      print('Error: $error');
+      _showErrorDialog(context, 'Error: $error');
     }
   }
+
   void _performPayment(double withdrawalAmount) async {
     try {
-      // Retrieve the account information of the sender
       final senderResponse = await http.get(Uri.parse('http://$ip_server:8000/bank/comptes/?client=${widget.clientId}'));
       if (senderResponse.statusCode == 200) {
         final accountSenderData = jsonDecode(senderResponse.body) as List<dynamic>;
-        print(accountSenderData);
+
         if (accountSenderData.isNotEmpty) {
           final double senderCurrentBalance = accountSenderData[0]['solde'];
           final int accountId = accountSenderData[0]['id'];
 
-          print(senderCurrentBalance);
-
           if (senderCurrentBalance >= withdrawalAmount) {
             final double newSenderBalance = senderCurrentBalance - withdrawalAmount;
 
-            // Update the sender's balance
             final Map<String, dynamic> updatedSenderBalance = {
               'solde': newSenderBalance,
             };
@@ -773,53 +821,43 @@ class _HomePageState extends State<HomePage> {
             );
 
             if (updateSenderResponse.statusCode == 200) {
-              // Save the withdrawal transaction
-              final Map<String, dynamic> PaymentTransactionData = {
+              final Map<String, dynamic> paymentTransactionData = {
                 'montant': withdrawalAmount,
                 'type': types.toString().split('.').last,
-                'num_facture': double.tryParse(numFacture.text),
+                'num_facture': double.tryParse(numFacture.text) ?? 0,
                 'compte': accountId,
               };
-
-              print(PaymentTransactionData);
 
               final transactionResponse = await http.post(
                 Uri.parse('http://$ip_server:8000/bank/payements/'),
                 headers: {'Content-Type': 'application/json'},
-                body: jsonEncode(PaymentTransactionData),
+                body: jsonEncode(paymentTransactionData),
               );
 
               if (transactionResponse.statusCode == 201 || transactionResponse.statusCode == 200) {
-                // Withdrawal transaction saved successfully
-                print('Withdrawal successful');
+                _showSuccessDialog(context, 'Payement effectué');
               } else {
-                // Error occurred while saving the withdrawal transaction
-                print(transactionResponse.statusCode);
-                print('Failed to save withdrawal transaction');
+                _showErrorDialog(context, 'votre payement à échoué');
               }
             } else {
-              // Error occurred while updating the sender's balance
-              print('Failed to update sender balance');
+              _showErrorDialog(context, 'Failed to update sender balance');
             }
           } else {
-            // Insufficient balance for withdrawal
-            print('Insufficient balance for withdrawal');
+            _showErrorDialog(context, 'Solde insuffisant');
           }
         } else {
-          // Account data not found
-          print('Account data not found');
+          _showErrorDialog(context, 'Account data not found');
         }
       } else {
-        // Error occurred while retrieving the account data
-        print('Failed to retrieve account data');
+        _showErrorDialog(context, 'Failed to retrieve account data');
       }
     } catch (error) {
-      print('Error: $error');
+      _showErrorDialog(context, 'Error: $error');
     }
   }
+
   void _performDeposit(double depositAmount) async {
     try {
-      // Retrieve the account information of the sender
       final senderResponse = await http.get(Uri.parse('http://$ip_server:8000/bank/comptes/?client=${widget.clientId}'));
       if (senderResponse.statusCode == 200) {
         final accountSenderData = jsonDecode(senderResponse.body) as List<dynamic>;
@@ -829,7 +867,6 @@ class _HomePageState extends State<HomePage> {
           final double newSenderBalance = senderCurrentBalance + depositAmount;
           final int accountId = accountSenderData[0]['id'];
 
-          // Update the sender's balance
           final Map<String, dynamic> updatedSenderBalance = {
             'solde': newSenderBalance,
           };
@@ -841,16 +878,12 @@ class _HomePageState extends State<HomePage> {
           );
 
           if (updateSenderResponse.statusCode == 200) {
-            // Save the deposit transaction
             final Map<String, dynamic> depositTransactionData = {
               'type': 1,
               'montant': depositAmount,
               'compte': accountId,
-              'operateur': noms.toString().split('.').last
-
+              'operateur': 'deposit_operator',
             };
-
-            print(depositTransactionData);
 
             final transactionResponse = await http.post(
               Uri.parse('http://$ip_server:8000/bank/operations/'),
@@ -859,27 +892,23 @@ class _HomePageState extends State<HomePage> {
             );
 
             if (transactionResponse.statusCode == 201 || transactionResponse.statusCode == 200) {
-              // Deposit transaction saved successfully
-              print('Deposit successful');
+              _showSuccessDialog(context, 'Depot effectué');
             } else {
-              // Error occurred while saving the deposit transaction
-              print('Failed to save deposit transaction');
+              _showErrorDialog(context, 'votre depot à échoué');
             }
           } else {
-            // Error occurred while updating the sender's balance
-            print('Failed to update sender balance');
+            _showErrorDialog(context, 'Failed to update sender balance');
           }
         } else {
-          // Account data not found
-          print('Account data not found');
+          _showErrorDialog(context, 'Account data not found');
         }
       } else {
-        // Error occurred while retrieving the account data
-        print('Failed to retrieve account data');
+        _showErrorDialog(context, 'Failed to retrieve account data');
       }
     } catch (error) {
-      print('Error: $error');
+      _showErrorDialog(context, 'Error: $error');
     }
   }
 }
+
 

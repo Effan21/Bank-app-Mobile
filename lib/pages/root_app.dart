@@ -28,13 +28,15 @@ class _RootAppState extends State<RootApp> {
           topRight: Radius.circular(40),
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        bottomNavigationBar: _buildBottomBar(),
-        floatingActionButton: _buildMidButton(),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterDocked,
-        body: _buildPage(),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          bottomNavigationBar: _buildBottomBar(),
+          floatingActionButton: _buildMidButton(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniCenterDocked,
+          body: _buildPage(),
+        ),
       ),
     );
   }

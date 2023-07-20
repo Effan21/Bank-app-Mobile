@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bank_app/const.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -52,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       var response = await http.get(
         Uri.parse(
-            'http://192.168.1.66:8000/bank/conversations/?user=${widget.clientId}'),
+            'http://$ip_server:8000/bank/conversations/?user=${widget.clientId}'),
       );
 
       if (response.statusCode == 200) {
@@ -82,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       var messagesResponse = await http.get(
         Uri.parse(
-            'http://192.168.1.66:8000/bank/conversations/$conversationId/messages/'),
+            'http://$ip_server:8000/bank/conversations/$conversationId/messages/'),
       );
 
       if (messagesResponse.statusCode == 200) {
@@ -122,7 +123,7 @@ class _ChatScreenState extends State<ChatScreen> {
       try {
         var response = await http.post(
           Uri.parse(
-              'http://192.168.1.66:8000/bank/conversations/$conversationId/messages/'), // Replace with your actual API URL
+              'http://$ip_server:8000/bank/conversations/$conversationId/messages/'), // Replace with your actual API URL
           body: json.encode({
             'conversation': conversationId, // Replace with your actual conversation ID
             'content': messageText.toString(),

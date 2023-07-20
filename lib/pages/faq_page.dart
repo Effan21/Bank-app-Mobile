@@ -1,3 +1,4 @@
+import 'package:bank_app/const.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,7 +22,7 @@ class _FaqPageState extends State<FaqPage> {
   }
 
   Future<void> fetchFaqs() async {
-    final response = await http.get(Uri.parse('http://192.168.1.66:8000/bank/faqs/'));
+    final response = await http.get(Uri.parse('http://$ip_server:8000/bank/faqs/'));
     if (response.statusCode == 200) {
       final List<dynamic> faqsData = jsonDecode(utf8.decode(response.bodyBytes));
       setState(() {
@@ -34,17 +35,19 @@ class _FaqPageState extends State<FaqPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: ListView.builder(
-              itemCount: faqs.length,
-              itemBuilder: (context, index) => FaqItem(faq: faqs[index]),
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            _buildHeader(context),
+            Expanded(
+              child: ListView.builder(
+                itemCount: faqs.length,
+                itemBuilder: (context, index) => FaqItem(faq: faqs[index]),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

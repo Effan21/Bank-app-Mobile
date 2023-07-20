@@ -1,2 +1,2 @@
 
-const String ip_server = "192.168.1.66";
+const String ip_server = "172.20.10.14";

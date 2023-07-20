@@ -1,11 +1,8 @@
 import 'dart:convert';
-
 import 'package:bank_app/pages/root_app.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_entry_text_field/pin_entry_text_field.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 import '../const.dart';
 import 'home_page.dart';
@@ -93,8 +90,8 @@ class _CodePageState extends State<CodePage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(left: screenWidth * 0.025),
-                          child: PinEntryTextField(
-                            fields: 4,
+                          child: OtpTextField(
+                            numberOfFields: 4,
                             onSubmit: (text) {
                               _code = int.parse(text);
                             },
@@ -153,26 +150,6 @@ class _CodePageState extends State<CodePage> {
         final clientId = client['id'];
         final clientName = client['nom'];
         final isActive = client['is_active'];
-
-        await Firebase.initializeApp();
-        final fcmToken = await FirebaseMessaging.instance.getToken();
-        final tokenResponse = await http.post(
-          Uri.parse('http://$ip_server:8000/bank/FCM_Token/'),
-          body: jsonEncode({
-            'user': clientId,
-            'token': fcmToken
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        );
-        if (tokenResponse.statusCode == 201) {
-          print('token added');
-        } else {
-          print('token not added');
-        }
-
-
         if (isActive == true) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => RootApp(clientId: clientId, clientName: clientName,)));
         } else {

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:pin_entry_text_field/pin_entry_text_field.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 import '../const.dart';
 import 'home_page.dart';
@@ -96,8 +96,8 @@ class _OtpPageState extends State<OtpPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(left: screenWidth * 0.025),
-                          child: PinEntryTextField(
-                            fields: 6,
+                          child: OtpTextField(
+                            numberOfFields: 6,
                             onSubmit: (text) {
                               smsOTP = text as String;
                             },

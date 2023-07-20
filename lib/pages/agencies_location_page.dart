@@ -63,7 +63,7 @@ class _LocationPageState extends State<LocationPage> {
             markerId: markerId,
             position: LatLng(lat, lng),
             onTap: () {
-              _showInfoWindow(markerId, agence);
+
             },
           );
         }).toSet();
@@ -73,72 +73,7 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-  void _showInfoWindow(MarkerId markerId, dynamic agence) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final offset = Offset.zero;
 
-    final infoWindow = InfoWindow(
-      markerId: markerId,
-      position: LatLng(
-        agence['latitude'] as double,
-        agence['longitude'] as double,
-      ),
-      onTap: () {
-        // Handle tap on the info window
-      },
-    );
-
-    _customInfoWindowController.addInfoWindow!(infoWindow);
-
-    _customInfoWindowController.onInfoWindowTap(() {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    agence['nom'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Contact: ${agence['contact']}',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  Text(
-                    'Email: ${agence['email']}',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    });
-  }
 
   @override
   void initState() {

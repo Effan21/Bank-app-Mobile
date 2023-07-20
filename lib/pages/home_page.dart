@@ -264,38 +264,12 @@ void checkBalance(){
           const SizedBox(
             width: 15,
           ),
-          _buildNotification()
+
         ],
       ),
     );
   }
 
-  Widget _buildNotification() {
-    return Container(
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(1, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Badge(
-
-        position: BadgePosition.topEnd(top: -5, end: 2),
-        badgeContent: Text(
-          '',
-          style: TextStyle(color: Colors.white),
-        ),
-        child: Icon(Icons.notifications_rounded),
-      ),
-    );
-  }
 
   Widget _buildTransactionTitle() {
     return Row(

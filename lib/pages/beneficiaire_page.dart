@@ -283,75 +283,77 @@
 
   @override
     Widget build(BuildContext context) {
-      return Scaffold(
+      return SafeArea(
+        child: Scaffold(
 
-        body:  Container(
-          decoration: BoxDecoration(
-            color: Colors.white60,
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.shadowColor.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: Offset(1, 1), // changes position of shadow
+          body:  Container(
+            decoration: BoxDecoration(
+              color: Colors.white60,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.shadowColor.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: Offset(1, 1), // changes position of shadow
+                ),
+              ],
+              image: DecorationImage(
+                image: AssetImage('assets/images/bgcard.png'),
               ),
-            ],
-            image: DecorationImage(
-              image: AssetImage('assets/images/bgcard.png'),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildHeader(context),
+                SizedBox(height: 45 ),
+                Initicon(
+                  text: widget.name,
+                  size: 85,
+                  backgroundColor: Colors.cyan,
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    '${widget.name}',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Numéro: ${widget.number}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomButton(
+                      onPressed: () {
+                        _openSendMoneyModal(context);
+                      },
+                      text: 'Send Money',
+                      context: context,
+                      color: Colors.orange,
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        // TODO: Implement delete logic
+
+                      },
+                      text: 'Delete',
+                      context: context,
+                      color: Colors.red,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildHeader(context),
-              SizedBox(height: 45 ),
-              Initicon(
-                text: widget.name,
-                size: 85,
-                backgroundColor: Colors.cyan,
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  '${widget.name}',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Numéro: ${widget.number}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomButton(
-                    onPressed: () {
-                      _openSendMoneyModal(context);
-                    },
-                    text: 'Send Money',
-                    context: context,
-                    color: Colors.orange,
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      // TODO: Implement delete logic
 
-                    },
-                    text: 'Delete',
-                    context: context,
-                    color: Colors.red,
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
-
       );
     }
   }

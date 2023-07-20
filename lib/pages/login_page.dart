@@ -20,10 +20,12 @@ class _LoginPageState extends State<LoginPage> {
   final _contactEditingController = TextEditingController();
   var _dialCode = '';
 
-  Future<String> fetchOTP(String phoneNumber) async {
-    print(phoneNumber);
+
+  Future<String> fetchOTP(String phoneNum) async {
+    print(phoneNum);
     final response =
-    await http.get(Uri.parse('http://$ip_server:8000/bank/$phoneNumber/'));
+    await http.get(Uri.parse('http://$ip_server:8000/bank/$phoneNum/'));
+
     print(response);
     if (response.statusCode == 200) {
       final otp = response.body;
@@ -35,14 +37,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> clickOnLogin(BuildContext context) async {
+    String phoneNumber = "+225${_contactEditingController.text}";
     if (_contactEditingController.text.isEmpty) {
       showErrorDialog(context, 'Contact number can\'t be empty.');
     } else {
       try {
-         fetchOTP(_contactEditingController.text);
+        print(phoneNumber);
+         fetchOTP(phoneNumber);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => OtpPage(phoneNumber: _contactEditingController.text,)),
+          MaterialPageRoute(builder: (context) => OtpPage(phoneNumber: phoneNumber,)),
         );
       } catch (e) {
         showErrorDialog(context, 'Failed to fetch OTP');
@@ -77,103 +81,105 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: screenHeight * 0.05,
-                ),
-                SizedBox(
-                  height: screenHeight * 0.05,
-                ),
-                Image.asset(
-                  'assets/images/registration.png',
-                  height: screenHeight * 0.3,
-                  fit: BoxFit.contain,
-                ),
-                SizedBox(
-                  height: screenHeight * 0.02,
-                ),
-                const Text(
-                  'Se connecter',
-                  style: TextStyle(fontSize: 28, color: Colors.black),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.02,
-                ),
-                const Text(
-                  'Entrez votre numéro de téléphone pour vous connecter',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: screenHeight * 0.05,
                   ),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.04,
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: screenWidth > 600 ? screenWidth * 0.2 : 16),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(16.0)),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        height: 45,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 253, 188, 51),
+                  SizedBox(
+                    height: screenHeight * 0.05,
+                  ),
+                  Image.asset(
+                    'assets/images/registration.png',
+                    height: screenHeight * 0.3,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                  ),
+                  const Text(
+                    'Se connecter',
+                    style: TextStyle(fontSize: 28, color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                  ),
+                  const Text(
+                    'Entrez votre numéro de téléphone pour vous connecter',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.04,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: screenWidth > 600 ? screenWidth * 0.2 : 16),
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          const BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 6.0,
                           ),
-                          borderRadius: BorderRadius.circular(36),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: screenWidth * 0.01,
+                        ],
+                        borderRadius: BorderRadius.circular(16.0)),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          height: 45,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 253, 188, 51),
                             ),
-                            Expanded(
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  hintText: 'Numéro de téléphone avec l\'indicatif',
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 13.5),
-                                ),
-                                controller: _contactEditingController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [LengthLimitingTextInputFormatter(14)],
+                            borderRadius: BorderRadius.circular(36),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: screenWidth * 0.01,
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'Numéro de téléphone avec l\'indicatif',
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(vertical: 13.5),
+                                  ),
+                                  controller: _contactEditingController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [LengthLimitingTextInputFormatter(14)],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      CustomButton(clickOnLogin),
-                    ],
-                  ),
-                )
-              ],
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        CustomButton(clickOnLogin),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

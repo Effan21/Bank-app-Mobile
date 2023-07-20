@@ -148,192 +148,194 @@ class _LoanState extends State<Loan> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(50),
-              topRight: Radius.circular(50),
-            ),
-          ),
-          padding: EdgeInsets.only(bottom: 55, left: 25, right: 25),
-          child: ElevatedButton(
-            onPressed: () => _showDialog(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.calculate),
-                SizedBox(width: 15),
-                Text("Simuler"),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.purple,
-           fixedSize: Size(300, 50),
-              textStyle: const TextStyle(fontSize: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
               ),
             ),
-          ),
-        ),
-
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context),
-            SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    controller: _pp,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
-                      ),
-                      floatingLabelStyle: TextStyle(color: Colors.purple),
-
-                      border: OutlineInputBorder(),
-                      labelText: 'Montant du prêt',
-                      suffixText: "XOF",
-                    ),
-                    onChanged: (String? string) {
-                      if (string!.isEmpty) {
-                        // Clear data
-                        _dp.clear();
-                        _fa.clear();
-                        _ir.clear();
-                        _t.clear();
-                        setState(() {
-                          downPayment = 0.0;
-                        });
-                        return;
-                      }
-                      _conPP = string.replaceAll(',', '');
-                      string = (string.replaceAll(',', ''));
-                      _pp.value = TextEditingValue(
-                        text: string,
-                        selection: TextSelection.collapsed(offset: string.length),
-                      );
-                      if (_conPP != "" && _conDP != "") {
-                        String total =
-                        (int.parse(_conPP) - int.parse(_conDP)).toString();
-                        _fa.value = TextEditingValue(
-                          text: total,
-                          selection: TextSelection.collapsed(offset: total.length),
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  Text("Acompte (${downPayment.toStringAsFixed(0)}%)"),
-                  Slider(
-                    activeColor: AppColor.purple,
-                    inactiveColor: AppColor.purple.withOpacity(0.2),
-                    value: downPayment,
-                    min: 0,
-                    max: 100,
-                    divisions: 100,
-                    label: "${downPayment.toStringAsFixed(0)}%",
-                    onChanged: (double? value) {
-                      int pp = int.parse(_pp.text.replaceAll(',', ''));
-                      int dp = (pp * value! / 100).round();
-                      setState(() {
-                        downPayment = value;
-                        _dp.text = (dp.toString().replaceAll(',', ''));
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _dp,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
-                      ),
-                      floatingLabelStyle: TextStyle(color: Colors.purple),
-                      border: OutlineInputBorder(),
-                      labelText: 'Acompte',
-                    ),
-                    onChanged: (String? string) {
-                      if (string!.isEmpty) return;
-                      if (int.parse(string.replaceAll(',', '')) > int.parse(_conPP)) {
-                        _dp.text = _conPP;
-                        return;
-                      }
-                      _conDP = string.replaceAll(',', '');
-                      string = (string.replaceAll(',', ''));
-                      _dp.value = TextEditingValue(
-                        text: string,
-                        selection: TextSelection.collapsed(offset: string.length),
-                      );
-                      // Check if the down payment is not empty
-                      if (_conDP != "") {
-                        // Check if the loan amount is not empty
-                        if (_conPP != "") {
-                          // Calculate the percentage of down payment
-                          double dp = int.parse(_conDP) / int.parse(_conPP) * 100;
-                          setState(() {
-                            downPayment = dp;
-                          });
-                        } else {
-                          // Check if the loan amount is empty
-                          String total = (int.parse(_conDP) / downPayment * 100).toString();
-                          _conPP = total.replaceAll('.', '');
-                          _pp.text = (total.replaceAll('.', ''));
-                        }
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _ir,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
-                      ),
-                      floatingLabelStyle: TextStyle(color: Colors.purple),
-                      border: OutlineInputBorder(),
-                      labelText: 'Taux dintérêt (%)',
-
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _t,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    decoration: const InputDecoration(
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
-                      ),
-                      floatingLabelStyle: TextStyle(color: Colors.purple),
-                      border: OutlineInputBorder(),
-                      labelText: 'Durée du prêt (Mois)',
-
-                    ),
-                  ),
+            padding: EdgeInsets.only(bottom: 55, left: 25, right: 25),
+            child: ElevatedButton(
+              onPressed: () => _showDialog(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.calculate),
+                  SizedBox(width: 15),
+                  Text("Simuler"),
                 ],
               ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.purple,
+             fixedSize: Size(300, 50),
+                textStyle: const TextStyle(fontSize: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
             ),
-          ],
+          ),
+
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _pp,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.purple),
+                        ),
+                        floatingLabelStyle: TextStyle(color: Colors.purple),
+
+                        border: OutlineInputBorder(),
+                        labelText: 'Montant du prêt',
+                        suffixText: "XOF",
+                      ),
+                      onChanged: (String? string) {
+                        if (string!.isEmpty) {
+                          // Clear data
+                          _dp.clear();
+                          _fa.clear();
+                          _ir.clear();
+                          _t.clear();
+                          setState(() {
+                            downPayment = 0.0;
+                          });
+                          return;
+                        }
+                        _conPP = string.replaceAll(',', '');
+                        string = (string.replaceAll(',', ''));
+                        _pp.value = TextEditingValue(
+                          text: string,
+                          selection: TextSelection.collapsed(offset: string.length),
+                        );
+                        if (_conPP != "" && _conDP != "") {
+                          String total =
+                          (int.parse(_conPP) - int.parse(_conDP)).toString();
+                          _fa.value = TextEditingValue(
+                            text: total,
+                            selection: TextSelection.collapsed(offset: total.length),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    Text("Acompte (${downPayment.toStringAsFixed(0)}%)"),
+                    Slider(
+                      activeColor: AppColor.purple,
+                      inactiveColor: AppColor.purple.withOpacity(0.2),
+                      value: downPayment,
+                      min: 0,
+                      max: 100,
+                      divisions: 100,
+                      label: "${downPayment.toStringAsFixed(0)}%",
+                      onChanged: (double? value) {
+                        int pp = int.parse(_pp.text.replaceAll(',', ''));
+                        int dp = (pp * value! / 100).round();
+                        setState(() {
+                          downPayment = value;
+                          _dp.text = (dp.toString().replaceAll(',', ''));
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _dp,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.purple),
+                        ),
+                        floatingLabelStyle: TextStyle(color: Colors.purple),
+                        border: OutlineInputBorder(),
+                        labelText: 'Acompte',
+                      ),
+                      onChanged: (String? string) {
+                        if (string!.isEmpty) return;
+                        if (int.parse(string.replaceAll(',', '')) > int.parse(_conPP)) {
+                          _dp.text = _conPP;
+                          return;
+                        }
+                        _conDP = string.replaceAll(',', '');
+                        string = (string.replaceAll(',', ''));
+                        _dp.value = TextEditingValue(
+                          text: string,
+                          selection: TextSelection.collapsed(offset: string.length),
+                        );
+                        // Check if the down payment is not empty
+                        if (_conDP != "") {
+                          // Check if the loan amount is not empty
+                          if (_conPP != "") {
+                            // Calculate the percentage of down payment
+                            double dp = int.parse(_conDP) / int.parse(_conPP) * 100;
+                            setState(() {
+                              downPayment = dp;
+                            });
+                          } else {
+                            // Check if the loan amount is empty
+                            String total = (int.parse(_conDP) / downPayment * 100).toString();
+                            _conPP = total.replaceAll('.', '');
+                            _pp.text = (total.replaceAll('.', ''));
+                          }
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _ir,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.purple),
+                        ),
+                        floatingLabelStyle: TextStyle(color: Colors.purple),
+                        border: OutlineInputBorder(),
+                        labelText: 'Taux dintérêt (%)',
+
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _t,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      decoration: const InputDecoration(
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.purple),
+                        ),
+                        floatingLabelStyle: TextStyle(color: Colors.purple),
+                        border: OutlineInputBorder(),
+                        labelText: 'Durée du prêt (Mois)',
+
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
